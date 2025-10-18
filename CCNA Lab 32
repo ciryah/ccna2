@@ -1,1 +1,44 @@
+!SW1	 2139
+!SW2	 2140
+!SW3	 2141
+!SW4	 2142
 
+!TASKS
+!All physical cabling is in place and verified. Connectivity between all four switches must be established and operational.
+!All ports are pre-configured as 802.1q trunks.
+!1. Configure both SW1 and SW2 ports e0/1 and e0/2 to permit only the allowed VLANs(VLAN 56 and 77)
+ena
+conf t
+int ra e0/1-2
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 56,77
+end
+!2. Configure both SW3 and SW4 ports e0/2 to permit only the allowed VLANs
+ena
+conf t
+int e0/2
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 56,77
+!3. Configure both SW1 and SW2 e0/1 ports to send and receive untagged traffic over VLAN 99
+ena
+conf t
+int e0/1
+switchport mode trunk
+switchport trunk native vlan 99
+end
+
+!4. Configure both SW3 and SW4 ports e0/0 and e0/1 for link aggregation using the industry standard protocol. All ports must immediately negotiate the link aggregation.
+conf t
+int ra e0/0-1
+channel-group 34 mode active
+channel-protocol lacp
+end
+
+!5. Permit only the allowed VLANs on the new link
+conf t
+int port-channel 34 
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan 56,77
