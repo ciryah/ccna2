@@ -1,0 +1,40 @@
+!SW1	 2135
+!SW2	 2136
+
+!1. Configure VLAN 12 named Compute and VLAN 34 named Telephony where required for each task.
+vlan 12
+name Compute
+exit
+vlan 34
+name Telephony
+end
+!2. Configure Ethernet0/1 on SW2 to use the existing VLAN named Available.
+int ethernet 0/1
+switchport mode access
+switchport access vlan 72
+end
+
+!3. Configure the connection between the switches using access ports.
+!Typed on both Switches(SW1 & SW2)
+!uplink to both is e0/0 so both must be on the same vlan(VLAN12)
+ena
+conf t
+int e0/0
+switchport mode access
+switchport access vlan 12
+int vlan 12
+no shut
+end
+
+!4. Configure Ethernet0/1 on SW1 using data and voice VLANs.
+enable
+configure terminal
+interface ethernet 0/1
+switchport mode access
+switchport access vlan 12
+switchport voice vlan 34
+
+!5. Configure Ethernet0/1 on SW2 so that the Cisco proprietary neighbor discovery protocol is turned off for the designated interface only.
+int e0/1
+no cdp enable
+
