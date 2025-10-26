@@ -1,0 +1,208 @@
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname D1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no logging console
+enable secret 5 $1$.64L$S/.xsT3xYAZ2keLDozeWB.
+!
+no aaa new-model
+clock timezone CET 1 0
+!
+!         
+!
+!
+!
+!
+ip dhcp excluded-address 10.2.1.1 10.2.1.99
+ip dhcp excluded-address 10.2.1.200 10.2.1.254
+!
+ip dhcp pool vlan10
+ network 10.2.1.0 255.255.255.0
+ default-router 10.2.1.254 
+!
+!
+no ip domain-lookup
+ip host access1v100.rivanit.com 192.168.1.131
+ip host access2v100.rivanit.com 192.168.1.132
+ip host core1v10.rivanit.com 10.2.1.1
+ip host core1v20.rivanit.com 10.2.2.1
+ip host core1v100.rivanit.com 192.168.1.129
+ip host core1e11.rivanit.com 10.1.4.6
+ip host core2v10.rivanit.com 10.2.1.2
+ip host core2v20.rivanit.com 10.2.2.2
+ip host core2v100.rivanit.com 192.168.1.130
+ip host core2e11.rivanit.com 10.1.4.10
+ip host edge10-R4e10.rivanit.com 10.1.4.5
+ip host edge10-R4e11.rivanit.com 10.1.4.9
+ip host edge10-R4e12.rivanit.com 10.1.1.10
+ip host fortinet-R3e12.rivanit.com 10.1.1.9
+ip host fortinet-R3e11.rivanit.com 10.1.1.6
+ip host paloalto-R2e11.rivanit.com 10.1.1.5
+ip host paloalto-R2e12.rivanit.com 10.1.1.2
+ip host ciscofirepower-R1e10.bgp.rivanit.com 10.1.1.1
+ip host ciscofirepower-R1e13.bgp.rivanit.com 209.9.9.1
+ip host ciscofirepower-R1e12.bgp.rivanit.com 207.7.7.1
+ip host ciscofirepower-R1e11.bgp.rivanit.com 208.8.8.1
+ip host corel44.isp1convergeict.com 44.44.44.44
+ip host core208e13.isp1convergeict.com 208.8.8.4
+ip host core24e11.isp1convergeict.com 24.2.4.4
+ip host core45e12.isp1convergeict.com 45.4.5.4
+ip host corel22.isp2pldt.net 22.22.22.22
+ip host core207e13.isp2pldt.net 207.7.7.2
+ip host core24e11.isp2pldt.net 24.2.4.2
+ip host core32e12.isp2pldt.net 32.3.2.2
+ip host core25e02.isp2pldt.net 25.2.5.2
+ip host corel33.isp3globe.com.ph 33.33.33.33
+ip host core209e13.isp3globe.com.ph 209.9.9.3
+ip host core32e12.isp3globe.com.ph 32.3.2.3
+ip host core35e11.isp3globe.com.ph 35.3.5.3
+ip host corel55.google.com 55.55.55.55
+ip host dns.google.com 8.8.8.8
+ip host core35e03.google.com 35.3.5.5
+ip host core25e02.google.com 25.2.5.5
+ip host core45e01.google.com 45.4.5.5
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+! 
+!
+!
+!
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ no ip address
+ ipv6 address FEC0::11:1/122
+!
+interface Ethernet0/0
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/3
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet1/0
+ switchport access vlan 100
+ switchport mode access
+!
+interface Ethernet1/1
+ no switchport
+ ip address 10.1.4.6 255.255.255.252
+ ipv6 address 2026::2:2/122
+!
+interface Ethernet1/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet1/3
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet2/0
+ shutdown
+!         
+interface Ethernet2/1
+ shutdown
+!
+interface Ethernet2/2
+ shutdown
+!
+interface Ethernet2/3
+ shutdown
+!
+interface Ethernet3/0
+ shutdown
+!
+interface Ethernet3/1
+ shutdown
+!
+interface Ethernet3/2
+ shutdown
+!
+interface Ethernet3/3
+ shutdown
+!
+interface Vlan10
+ ip address 10.2.1.1 255.255.255.0
+ ipv6 address 10:2:1:12::1/64
+!
+interface Vlan20
+ ip address 10.2.2.1 255.255.255.0
+ ipv6 address 10:2:2:12::1/64
+!
+interface Vlan100
+ ip address 192.168.1.129 255.255.255.224
+ ipv6 address 2026::3:1/122
+!
+!
+router eigrp 100
+ network 10.1.4.4 0.0.0.3
+ network 10.2.1.0 0.0.0.255
+ network 10.2.2.0 0.0.0.255
+ network 192.168.1.128 0.0.0.31
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+!
+!
+!
+control-plane
+!
+alias exec bp show ip int brief | ex una
+alias exec sr show ip route
+alias exec cn show cdp nei
+alias exec sp show ip protocols
+alias exec bp6 show ipv6 int brief | exc down
+alias exec sr6 show ipv6 route
+alias exec sbs6 show bgp ipv6 summ
+alias exec sc show run | sec
+!
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 0 0
+ no login
+ transport input all
+!
+!
+!
+end
