@@ -1,0 +1,240 @@
+!
+! Last configuration change at 04:12:14 CET Sun Oct 26 2025
+!
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname P1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no logging console
+enable secret 5 $1$s9go$u08lTZkPUb79vJ998Ntyj.
+!
+no aaa new-model
+!
+!
+!
+clock timezone CET 1 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!         
+!
+!
+no ip domain lookup
+ip host core45e01.google.com 45.4.5.5
+ip host core208e13.isp1convergeict.com 208.8.8.4
+ip host dns.google.com 8.8.8.8
+ip host paloalto-R2e11.rivanit.com 10.1.1.5
+ip host fortinet-R3e12.rivanit.com 10.1.1.9
+ip host edge10-R4e10.rivanit.com 10.1.4.5
+ip host ciscofirepower-R1e10.bgp.rivanit.com 10.1.1.1
+ip host access1v100.rivanit.com 192.168.1.131
+ip host access2v100.rivanit.com 192.168.1.132
+ip host core1v10.rivanit.com 10.2.1.1
+ip host core1v20.rivanit.com 10.2.2.1
+ip host core1v100.rivanit.com 192.168.1.129
+ip host core1e11.rivanit.com 10.1.4.6
+ip host core2v10.rivanit.com 10.2.1.2
+ip host core2v20.rivanit.com 10.2.2.2
+ip host core2v100.rivanit.com 192.168.1.130
+ip host core2e11.rivanit.com 10.1.4.10
+ip host edge10-R4e11.rivanit.com 10.1.4.9
+ip host edge10-R4e12.rivanit.com 10.1.1.10
+ip host fortinet-R3e11.rivanit.com 10.1.1.6
+ip host paloalto-R2e12.rivanit.com 10.1.1.2
+ip host ciscofirepower-R1e13.bgp.rivanit.com 209.9.9.1
+ip host ciscofirepower-R1e12.bgp.rivanit.com 207.7.7.1
+ip host ciscofirepower-R1e11.bgp.rivanit.com 208.8.8.1
+ip host corel44.isp1convergeict.com 44.44.44.44
+ip host core24e11.isp1convergeict.com 24.2.4.4
+ip host core45e12.isp1convergeict.com 45.4.5.4
+ip host corel22.isp2pldt.net 22.22.22.22
+ip host core207e13.isp2pldt.net 207.7.7.2
+ip host core24e11.isp2pldt.net 24.2.4.2
+ip host core32e12.isp2pldt.net 32.3.2.2
+ip host core25e02.isp2pldt.net 25.2.5.2
+ip host corel33.isp3globe.com.ph 33.33.33.33
+ip host core209e13.isp3globe.com.ph 209.9.9.3
+ip host core32e12.isp3globe.com.ph 32.3.2.3
+ip host core35e11.isp3globe.com.ph 35.3.5.3
+ip host corel55.google.com 55.55.55.55
+ip host core35e03.google.com 35.3.5.5
+ip host core25e02.google.com 25.2.5.5
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!         
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!         
+!
+!
+!
+!
+interface Ethernet0/0
+ ip address 10.2.1.101 255.255.255.0
+ duplex auto
+ ipv6 address 10:2:1:12::B00B/64
+!
+interface Ethernet0/1
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet2/0
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet2/1
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet2/2
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet2/3
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet3/0
+ no ip address
+ shutdown
+ duplex auto
+!         
+interface Ethernet3/1
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet3/2
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet3/3
+ no ip address
+ shutdown
+ duplex auto
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 10.2.1.1
+ip route 0.0.0.0 0.0.0.0 10.2.1.2 2
+ip route 192.168.1.128 255.255.255.224 10.2.1.1
+ip route 192.168.1.130 255.255.255.255 10.2.1.2
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+alias exec bp show ip int brief | ex una
+alias exec sr show ip route
+alias exec cn show cdp nei
+alias exec sp show ip protocols
+alias exec bp6 show ipv6 int brief | exc down
+alias exec sr6 show ipv6 route
+alias exec sbs6 show bgp ipv6 summ
+alias exec sc show run | sec
+!         
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 0 0
+ no login
+ transport input all
+!
+!
+end
