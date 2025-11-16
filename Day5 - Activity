@@ -11,3 +11,43 @@ Bit Value
 7 - 6
 5. 32
 6 - 5
+
+
+
+192.168.32.0/19 (3rd, 32i)
+19+5=24
+192.168.32.0/24
+192.168.33.0/24
+192.168.34.0/24
+192.168.35.0/24
+r1 e0/0 192.168.35.1
+r2 e0/0 192.168.35.254
+
+!@EDGE
+ipv6 unicast-routing
+int lo100
+ipv6 add 2001:fafa:bebe:c0c0:1800::1/69
+int lo101
+ipv6 add 2001:fafa:bebe:c0c0:2000::1/69
+int lo102
+ipv6 add 2001:fafa:bebe:c0c0:2800::1/69
+int lo103
+ipv6 add 2001:fafa:bebe:c0c0:3000::1/69
+int lo104
+ipv6 add 2001:fafa:bebe:c0c0:ffff:ffff:ffff:ffff/69
+!anycast only works if network is less than /64
+
+
+2001:fd80:eff:12:7000::/72(72+4)
+2001:fd80:eff:12:7010::1/76
+2001:fd80:eff:12:7020::1/76
+2001:fd80:eff:12:7030::1/76
+2001:fd80:eff:12:7040::1/76
+2001:fd80:eff:12:7050::1/76
+
+
+30 subnet
+82+5=87
+
+2001:fd80:eff:af:eff0:ff:1
+
