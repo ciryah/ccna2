@@ -1,59 +1,93 @@
+version 15.0
+no service pad
 service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
 !
-hostname CUCM-41
+hostname COREbaba-41
 !
 boot-start-marker
 boot-end-marker
 !
 !
 no logging console
-enable secret 5 $1$5QlT$L7cMhFHjn1XtZahKBdCsL0
+enable secret 5 $1$40mN$708AyGQiHCuliLMPoatX./
 !
 no aaa new-model
+system mtu routing 1500
+ip routing
+no ip domain-lookup
 !
-mmi polling-interval 60
-no mmi auto-configure
-no mmi pvc
-mmi snmp-timeout 180
-crypto pki token default removal timeout 0
+ip dhcp excluded-address 10.41.1.1 10.41.1.100
+ip dhcp excluded-address 10.41.10.1 10.41.10.100
+ip dhcp excluded-address 10.41.50.1 10.41.50.100
+ip dhcp excluded-address 10.41.100.1 10.41.100.100
 !
+ip dhcp pool MGMTDATA
+ network 10.41.1.0 255.255.255.0
+ default-router 10.41.1.4 
+ domain-name MGMTDATA.COM
+ dns-server 10.41.1.10 
 !
-dot11 syslog
+ip dhcp pool WIFIDATA
+ network 10.41.10.0 255.255.255.0
+ default-router 10.41.10.4 
+ domain-name WIFIDATA.COM
+ dns-server 10.41.1.10 
 !
+ip dhcp pool IPCCTV
+ network 10.41.50.0 255.255.255.0
+ default-router 10.41.50.4 
+ domain-name IPCCTV.COM
+ dns-server 10.41.1.10 
 !
-!
-!
-!
-no ip domain lookup
-ip cef
-no ipv6 cef
-!
-multilink bundle-name authenticated
-!
-!
-!
-!
-!
-!
-!
-voice service voip
- ip address trusted list
-  ipv4 0.0.0.0 0.0.0.0
- h323
-  call start slow
-!
-!
-!
-!
-!
-voice-card 0
+ip dhcp pool VOICEVLAN
+ network 10.41.100.0 255.255.255.0
+ default-router 10.41.100.4 
+ domain-name VOICEVLAN.COM
+ dns-server 10.41.1.10 
+ option 150 ip 10.41.100.8 
 !
 !
 !
-license udi pid C1861E-SRST-C-F/K9 sn FTX170881PQ
-license accept end user agreement
+!
+crypto pki trustpoint TP-self-signed-1927884672
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1927884672
+ revocation-check none
+ rsakeypair TP-self-signed-1927884672
+!
+!
+crypto pki certificate chain TP-self-signed-1927884672
+ certificate self-signed 01
+  3082022B 30820194 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31393237 38383436 3732301E 170D3933 30333031 30303031 
+  31335A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 39323738 
+  38343637 3230819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100EC39 54D68FFE 64D9ABD2 6EDE7B58 7705B6B1 E4712045 DAAE6F62 A70C1B61 
+  681881A0 75A95CA9 0151CC73 5F3CBABF 01F45CA3 7549CF84 A5B9F566 F5A8B0E2 
+  C2CCE609 DFAB9C4A 4DB1F902 348D905C 0256BF0D 2870D71C A7D070BA AE4C3023 
+  5E6B1145 EF21911F A7F39770 3B15E86C 87F14AB0 34BBFEAA 45B0CFD0 EC0B1F06 
+  91770203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 301F0603 
+  551D2304 18301680 14541EBA B0B2227E D18E0CC8 BF713C8E AA79FC74 E2301D06 
+  03551D0E 04160414 541EBAB0 B2227ED1 8E0CC8BF 713C8EAA 79FC74E2 300D0609 
+  2A864886 F70D0101 05050003 81810078 36E5D9E1 38C35C78 5571BDAA 6ACB9A61 
+  94D39940 2261FDF3 76467BAB 8596BE7D DA99401B E4413E64 0B8FBA49 7FE3CBAC 
+  3789B3BF 83D7250A 4D305868 7A47A116 033F4CCA FE0EA850 8473B65D B7DB1EFA 
+  252611F4 1354B2B8 946964F4 5A1F384C 7BA05DD1 54824DE0 F4D2FF12 C4A53F2F 
+  D9D86962 D46D76BC C05DF060 960707
+        quit
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
 !
 !
 ! 
@@ -66,299 +100,101 @@ license accept end user agreement
 !
 !
 !
-interface FastEthernet0/0
- ip address 10.41.100.8 255.255.255.0
- duplex auto
- speed auto
 !
-interface Integrated-Service-Engine0/0
- no ip address
- shutdown
 !
-interface FastEthernet0/1/0
- no ip address
 !
-interface FastEthernet0/1/1
- no ip address
+interface FastEthernet0/1
 !
-interface FastEthernet0/1/2
- no ip address
-!         
-interface FastEthernet0/1/3
- no ip address
+interface FastEthernet0/2
+ switchport access vlan 10
+ switchport mode access
 !
-interface FastEthernet0/1/4
- no ip address
+interface FastEthernet0/3
+ switchport access vlan 100
+ switchport mode access
 !
-interface FastEthernet0/1/5
- no ip address
+interface FastEthernet0/4
+ switchport access vlan 10
+ switchport mode access
 !
-interface FastEthernet0/1/6
- no ip address
+interface FastEthernet0/5
+ switchport mode access
+ switchport voice vlan 100
+ mls qos trust device cisco-phone
 !
-interface FastEthernet0/1/7
- no ip address
+interface FastEthernet0/6
+ switchport access vlan 50
+ switchport mode access
 !
-interface FastEthernet0/1/8
- no ip address
+interface FastEthernet0/7
+ switchport mode access
+ switchport voice vlan 100
+ mls qos trust device cisco-phone
 !
-interface FastEthernet0/2/0
- no ip address
- shutdown
- duplex auto
- speed auto
+interface FastEthernet0/8
+ switchport access vlan 50
+ switchport mode access
 !
-interface FastEthernet0/2/1
- no ip address
- shutdown
- duplex auto
- speed auto
+interface FastEthernet0/9
+!
+interface FastEthernet0/10
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/11
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/12
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet0/1
+ no switchport
+ ip address 10.41.41.4 255.255.255.0
+ ip ospf network point-to-point
 !
 interface Vlan1
- no ip address
+ description MGMTDATA
+ ip address 10.41.1.4 255.255.255.0
+!
+interface Vlan10
+ description WIRELESS
+ ip address 10.41.10.4 255.255.255.0
+!
+interface Vlan50
+ description IPCCTV
+ ip address 10.41.50.4 255.255.255.0
+!
+interface Vlan100
+ description VOICEVLAN
+ ip address 10.41.100.4 255.255.255.0
 !
 router ospf 1
- router-id 10.41.100.8
- network 10.41.100.0 0.0.0.255 area 0
+ router-id 10.41.41.4
+ network 10.41.0.0 0.0.255.255 area 0
 !
-ip forward-protocol nd
-no ip http server
-no ip http secure-server
+ip http server
+ip http secure-server
 !
 !
 !
-!
-!         
-!
-!
-!
-!
-control-plane
-!
-!
-voice-port 0/0/0
-!
-voice-port 0/0/1
-!
-voice-port 0/0/2
-!
-voice-port 0/0/3
-!
-voice-port 0/1/0
-!
-voice-port 0/1/1
-!
-voice-port 0/1/2
-!
-voice-port 0/1/3
-!
-voice-port 0/4/0
- auto-cut-through
- signal immediate
- input gain auto-control
- description Music On Hold Port
-!
-!
-!
-mgcp profile default
-!
-!
-dial-peer voice 1 pots
- destination-pattern 4100
- port 0/0/0
-!
-dial-peer voice 2 pots
- destination-pattern 4101
- port 0/0/1
-!
-dial-peer voice 3 pots
- destination-pattern 4102
- port 0/0/2
-!
-dial-peer voice 4 pots
- destination-pattern 4103
- port 0/0/3
-!
-dial-peer voice 11 voip
- destination-pattern 11..
- session target ipv4:10.11.100.8
- codec g711ulaw
-!
-dial-peer voice 12 voip
- destination-pattern 12..
- session target ipv4:10.12.100.8
- codec g711ulaw
-!
-dial-peer voice 21 voip
- destination-pattern 21..
- session target ipv4:10.21.100.8
- codec g711ulaw
-!
-dial-peer voice 22 voip
- destination-pattern 22..
- session target ipv4:10.22.100.8
- codec g711ulaw
-!
-dial-peer voice 31 voip
- destination-pattern 31..
- session target ipv4:10.31.100.8
- codec g711ulaw
-!
-dial-peer voice 32 voip
- destination-pattern 32..
- session target ipv4:10.32.100.8
- codec g711ulaw
-!
-dial-peer voice 42 voip
- destination-pattern 42..
- session target ipv4:10.42.100.8
- codec g711ulaw
-!
-dial-peer voice 51 voip
- destination-pattern 51..
- session target ipv4:10.51.100.8
- codec g711ulaw
-!         
-dial-peer voice 52 voip
- destination-pattern 52..
- session target ipv4:10.52.100.8
- codec g711ulaw
-!
-dial-peer voice 61 voip
- destination-pattern 61..
- session target ipv4:10.61.100.8
- codec g711ulaw
-!
-dial-peer voice 62 voip
- destination-pattern 62..
- session target ipv4:10.62.100.8
- codec g711ulaw
-!
-dial-peer voice 71 voip
- destination-pattern 71..
- session target ipv4:10.71.100.8
- codec g711ulaw
-!
-dial-peer voice 72 voip
- destination-pattern 72..
- session target ipv4:10.72.100.8
- codec g711ulaw
-!
-dial-peer voice 81 voip
- destination-pattern 81..
- session target ipv4:10.81.100.8
- codec g711ulaw
-!
-dial-peer voice 82 voip
- destination-pattern 82..
- session target ipv4:10.82.100.8
- codec g711ulaw
-!
-dial-peer voice 91 voip
- destination-pattern 91..
- session target ipv4:10.91.100.8
- codec g711ulaw
-!
-dial-peer voice 92 voip
- destination-pattern 92..
- session target ipv4:10.92.100.8
- codec g711ulaw
-!         
-!
-!
-!
-telephony-service
- no auto-reg-ephone
- max-ephones 5
- max-dn 20
- ip source-address 10.41.100.8 port 2000
- max-conferences 4 gain -6
- transfer-system full-consult
- create cnf-files version-stamp 7960 Jan 02 2006 13:42:56
-!
-!
-ephone-dn  1
- number 4111
-!
-!
-ephone-dn  2
- number 4122
-!
-!
-ephone-dn  3
- number 4133
-!
-!
-ephone-dn  4
- number 4144
-!
-!
-ephone-dn  5
- number 4155
-!
-!
-ephone-dn  6
- number 4166
-!
-!
-ephone-dn  7
- number 4177
-!
-!
-ephone-dn  8
- number 4188
-!
-!         
-ephone-dn  9
- number 4107
-!
-!
-ephone-dn  10
- number 4131
-!
-!
-ephone  1
- device-security-mode none
- video
- mac-address 204C.9E6C.E263
- max-calls-per-button 3
- busy-trigger-per-button 2
- type 8945
- button  1:8 2:7 3:6 4:9
-!
-!
-!
-ephone  2
- device-security-mode none
- video
- mac-address CCD8.C1FA.EE43
- max-calls-per-button 3
- busy-trigger-per-button 2
- type 8945
- button  1:4 2:3 3:2 4:10
 !
 !
 !
 line con 0
  exec-timeout 0 0
- password 7 095C4F1A0A
+ password 7 1315160118
  login
-line aux 0
-line 2
- no activation-character
- no exec
- transport preferred none
- transport input all
- transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
 line vty 0 4
  exec-timeout 0 0
- password 7 08314D5D1A
- login    
- transport input all
+ password 7 1315160118
+ login
 line vty 5 14
  exec-timeout 0 0
- password 7 08314D5D1A
+ password 7 1315160118
  login
- transport input all
+line vty 15
+ login
 !
 end
